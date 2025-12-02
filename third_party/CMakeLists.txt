@@ -5,7 +5,7 @@
 option(USE_CUSTOM_TT_MLIR_VERSION "Flag to use TT_MLIR_VERSION set by the user" OFF)
 
 if (NOT DEFINED TT_MLIR_VERSION OR NOT USE_CUSTOM_TT_MLIR_VERSION)
-    set(TT_MLIR_VERSION "8b2e9321d7e8c1d666b94dda1d27017213eae8cc")
+    set(TT_MLIR_VERSION "93cb180415c623a9b8df00ab4965b021eb6a8124")
 endif()
 
 set(PROTOBUF_VERSION "v21.12") # same version as tt-metal uses
@@ -15,7 +15,7 @@ if (TOOLCHAIN STREQUAL "ON")
     cmake_minimum_required(VERSION 3.20)
     project(ttmlir-toolchain LANGUAGES CXX C)
     execute_process(
-        COMMAND git clone --recursive https://github.com/tenstorrent/tt-mlir.git ${PROJECT_SOURCE_DIR}/tt-mlir/src/tt-mlir
+        COMMAND git clone --recursive https://github.com/navdeepkk-polymagelabs/tt-mlir.git ${PROJECT_SOURCE_DIR}/tt-mlir/src/tt-mlir
         RESULT_VARIABLE result1
         OUTPUT_VARIABLE output1
         ERROR_VARIABLE error_output1
@@ -86,6 +86,8 @@ else()
 
         BUILD_COMMAND env ${WITH_METAL_RUNTIME_ROOT_SET} ${CMAKE_COMMAND} --build <BINARY_DIR>
         COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --target tt-alchemist
+        COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --target stablehlo-translate
+        COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --target stablehlo-opt
 
         INSTALL_COMMAND ${CMAKE_COMMAND} --install <BINARY_DIR> --component SharedLib
         COMMAND ${CMAKE_COMMAND} --install <BINARY_DIR> --component DistributedRuntime
@@ -104,7 +106,7 @@ else()
           -DTT_RUNTIME_ENABLE_PERF_TRACE=${TTMLIR_ENABLE_PERF_TRACE}
           -DTTMLIR_ENABLE_OPMODEL=ON
           -DTTMLIR_ENABLE_EXPLORER=${TTXLA_ENABLE_EXPLORER}
-        GIT_REPOSITORY https://github.com/tenstorrent/tt-mlir.git
+        GIT_REPOSITORY https://github.com/navdeepkk-polymagelabs/tt-mlir.git
         GIT_TAG ${TT_MLIR_VERSION}
         GIT_PROGRESS ON
     )
